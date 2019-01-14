@@ -281,11 +281,13 @@ urlsafe_base64(){
 ss_link_qr(){
 	SSbase64=$(urlsafe_base64 "${method}:${password}@${ip}:${port}")
 	SSurl="ss://${SSbase64}"
-	#SSQRcode="http://doub.pw/qr/qr.php?text=${SSurl}"
-        #SSQRcode="http://qr.liantu.com/api.php?text=${SSurl}"
-        #SSQRcode="https://qzhan.life/2API/index.php?text=${SSurl}"
-        SSQRcode="http://103.118.40.170/2API/index.php?text=${SSurl}"
+	#SSQRcode="http://doub.pw/qr/qr.php?text=${SSurl}" #失效
+        #SSQRcode="http://qr.liantu.com/api.php?text=${SSurl}" #安全性未知
+        #SSQRcode="https://qzhan.life/2API/index.php?text=${SSurl}" #自建，非长久
+        SSQRcode="http://103.118.40.170/2API/index.php?text=${SSurl}" #自建，长久
 	ss_link=" SS    链接 : ${Green_font_prefix}${SSurl}${Font_color_suffix} \n SS  二维码 : ${Green_font_prefix}${SSQRcode}${Font_color_suffix}"
+	#生成二维码
+	echo "${SSurl}" | qrencode -o - -t UTF8 >a
 }
 ssr_link_qr(){
 	SSRprotocol=$(echo ${protocol} | sed 's/_compatible//g')
@@ -297,6 +299,8 @@ ssr_link_qr(){
 	#SSRQRcode="http://qr.liantu.com/api.php?text=${SSRurl}"
 	SSRQRcode="http://103.118.40.170/2API/index.php?text=${SSRurl}"
 	ssr_link=" SSR   链接 : ${Red_font_prefix}${SSRurl}${Font_color_suffix} \n SSR 二维码 : ${Red_font_prefix}${SSRQRcode}${Font_color_suffix} \n "
+	#生成二维码
+	echo "${SSRurl}" | qrencode -o - -t UTF8 >b
 }
 ss_ssr_determine(){
 	protocol_suffix=`echo ${protocol} | awk -F "_" '{print $NF}'`
@@ -369,9 +373,12 @@ View_User_info(){
 	echo -e " 剩余的流量 : ${Green_font_prefix}${transfer_enable_Used} ${Font_color_suffix}"
 	echo -e " 用户总流量 : ${Green_font_prefix}${transfer_enable} ${Font_color_suffix}"
 	echo -e "${ss_link}"
+	cat a 2>/dev/null
 	echo -e "${ssr_link}"
+	cat b 2>/dev/null
+	rm -f a
+	rm -f b
 	echo -e " ${Green_font_prefix} 提示: ${Font_color_suffix}
- 在浏览器中，打开二维码链接，就可以看到二维码图片。
  协议和混淆后面的[ _compatible ]，指的是 兼容原版协议/混淆。"
 	echo && echo "==================================================="
 }
@@ -841,9 +848,9 @@ Centos_yum(){
 	yum update
 	cat /etc/redhat-release |grep 7\..*|grep -i centos>/dev/null
 	if [[ $? = 0 ]]; then
-		yum install -y vim unzip crond net-tools
+		yum install -y vim unzip crond libpng libpng-devel qrencode net-tools
 	else
-		yum install -y vim unzip crond
+		yum install -y vim unzip crond libpng libpng-devel qrencode
 	fi
 }
 Debian_apt(){

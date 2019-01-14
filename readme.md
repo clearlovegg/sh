@@ -15,3 +15,7 @@ git config --list   查看工作环境信息
 git status 状态
 git checkout -- [file] 恢复误删的文件
 ```
+```
+1.更改了逗比脚本qr链接,原链接已经失效
+2.在逗比现有的脚本基础上，增加了直接在shell终端显示二维码的功能
+```
