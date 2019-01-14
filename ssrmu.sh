@@ -848,9 +848,9 @@ Centos_yum(){
 	yum update
 	cat /etc/redhat-release |grep 7\..*|grep -i centos>/dev/null
 	if [[ $? = 0 ]]; then
-		yum install -y vim unzip crond libpng libpng-devel qrencode net-tools
+		yum install -y vim unzip crond epel-release libpng libpng-devel qrencode net-tools
 	else
-		yum install -y vim unzip crond libpng libpng-devel qrencode
+		yum install -y vim unzip crond epel-release libpng libpng-devel qrencode
 	fi
 }
 Debian_apt(){
